@@ -29,30 +29,38 @@ app.use(express.static("./"));
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "index");
 });
-app.post("/encrypt", upload.single("file"), (req, res) => {
-  const password = req.body.password;
-  const filePath = req.file.path;
-  console.log(password);
-  const f = fs.readFileSync("./uploads/file.txt", "utf-8");
-  const encryptedContent = aes256.encrypt(password, f);
-  // Send the encrypted content as a response
-  res.setHeader("Content-Disposition", "attachment; filename=file.txt");
-  res.setHeader("Content-Type", "text/plain");
-  res.send(encryptedContent);
-});
+app.post(
+  "https://cadencryption.adaptable.app/encrypt",
+  upload.single("file"),
+  (req, res) => {
+    const password = req.body.password;
+    const filePath = req.file.path;
+    console.log(password);
+    const f = fs.readFileSync("./uploads/file.txt", "utf-8");
+    const encryptedContent = aes256.encrypt(password, f);
+    // Send the encrypted content as a response
+    res.setHeader("Content-Disposition", "attachment; filename=file.txt");
+    res.setHeader("Content-Type", "text/plain");
+    res.send(encryptedContent);
+  }
+);
 
-app.post("/decrypt", upload.single("file"), (req, res) => {
-  const password = req.body.password;
-  const filePath = req.file.path;
-  console.log("decrpt: ", password);
-  const f = fs.readFileSync("./uploads/file.txt", "utf-8");
-  const decryptedContent = aes256.decrypt(password, f);
-  // const encryptedContent = aes256.encrypt(password, f);
-  // Send the encrypted content as a response
-  res.setHeader("Content-Disposition", "attachment; filename=file.txt");
-  res.setHeader("Content-Type", "text/plain");
-  res.send(decryptedContent);
-});
+app.post(
+  "https://cadencryption.adaptable.app/decrypt",
+  upload.single("file"),
+  (req, res) => {
+    const password = req.body.password;
+    const filePath = req.file.path;
+    console.log("decrpt: ", password);
+    const f = fs.readFileSync("./uploads/file.txt", "utf-8");
+    const decryptedContent = aes256.decrypt(password, f);
+    // const encryptedContent = aes256.encrypt(password, f);
+    // Send the encrypted content as a response
+    res.setHeader("Content-Disposition", "attachment; filename=file.txt");
+    res.setHeader("Content-Type", "text/plain");
+    res.send(decryptedContent);
+  }
+);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
