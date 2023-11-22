@@ -2,9 +2,9 @@
   "name": "end_to_end_encryption",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.cjs",
   "scripts": {
-    "start": "node app3.js"
+    "start": "node server.cjs"
   },
   "type": "module",
   "keywords": [],
