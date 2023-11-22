@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STL File Encryption/Decryption</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+
+      #container {
+        text-align: center;
+        padding: 80px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      label {
+        background-color: #3498db;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #result {
+        margin-top: 20px;
+      }
+
+      button {
+        margin-top: 10px;
+        background-color: #2ecc71;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <input required type="file" id="fileInput" />
+      <label for="fileInput" id="uploadLabel">Upload STL File</label>
+
+      <input type="password" id="passwordInput" placeholder="Enter Password" />
+
+      <div id="result"></div>
+
+      <button onclick="encryptFile()">Encrypt File</button>
+      <button onclick="decryptFile()">Decrypt File</button>
+    </div>
+
+    <script>
+      let extension;
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", handleFile);
+
+      function handleFile() {
+        const fileInput = document.getElementById("fileInput");
+        const resultDiv = document.getElementById("result");
+        let a = fileInput.files[0].name.split(".");
+        extension = a[a.length - 1];
+        resultDiv.innerHTML = `Selected File: ${fileInput.files[0].name}`;
+      }
+
+      function encryptFile() {
+        const password = document.getElementById("passwordInput").value;
+        const fileInput = document.getElementById("fileInput");
+        const file = fileInput.files[0];
+        if (!password || !file) {
+          alert("please fill all detail");
+          return;
+        }
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("password", password);
+        const resultDiv = document.getElementById("result");
+        // resultDiv.innerHTML = null;
+        // fileInput.files[0] = null;
+        // document.getElementById("passwordInput").textContent = null;
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/encrypt", true);
+        xhr.responseType = "blob";
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log("fffffffffffffff");
+            const blob = new Blob([xhr.response], { type: "text/plain" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `encrypt.${extension}`;
+            link.click();
+          }
+        };
+        xhr.send(formData);
+      }
+
+      function decryptFile() {
+        const password = document.getElementById("passwordInput").value;
+        const fileInput = document.getElementById("fileInput");
+        const file = fileInput.files[0];
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("password", password);
+        if (!password || !file) {
+          alert("please fill all detail");
+          return;
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/decrypt", true);
+        xhr.responseType = "blob";
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log("ddddddddddddd");
+            const blob = new Blob([xhr.response], { type: "text/plain" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `dycrypt.${extension}`;
+            link.click();
+          }
+        };
+        xhr.send(formData);
+      }
+    </script>
+  </body>
+</html>
