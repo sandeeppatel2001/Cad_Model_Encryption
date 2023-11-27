@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
     );
   },
 });
-
+const key = "sandeeppppppp";
 const upload = multer({ storage: storage });
 
 // Serve static files from the "public" directory
@@ -32,6 +32,7 @@ app.get("/", (req, res) => {
 app.post("/encrypt", upload.single("file"), (req, res) => {
   const password = req.body.password;
   const filePath = req.file.path;
+  key = key + password;
   console.log(password);
   const f = fs.readFileSync("./uploads/file.txt", "utf-8");
   const encryptedContent = aes256.encrypt(password, f);
