@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
     );
   },
 });
-const key = "sandeeppppppp";
+let key = "sandeeppppppp";
 const upload = multer({ storage: storage });
 
 // Serve static files from the "public" directory
